@@ -1,0 +1,51 @@
+2020/11/24 12:10:38 [error] [exception.CDbException] SQLSTATE[HY000] [1049] Unknown database 'codeine_website_reviewer'
+2020/11/24 12:10:38 [error] [exception.CDbException] CDbException: CDbConnection failed to open the DB connection. in C:\Users\Maximus Stark\Desktop\job\framework\db\CDbConnection.php:405
+Stack trace:
+#0 C:\Users\Maximus Stark\Desktop\job\framework\db\CDbConnection.php(347): CDbConnection->open()
+#1 C:\Users\Maximus Stark\Desktop\job\framework\db\CDbConnection.php(325): CDbConnection->setActive(true)
+#2 C:\Users\Maximus Stark\Desktop\job\framework\base\CModule.php(394): CDbConnection->init()
+#3 C:\Users\Maximus Stark\Desktop\job\framework\base\CApplication.php(459): CModule->getComponent('db')
+#4 C:\Users\Maximus Stark\Desktop\job\framework\db\ar\CActiveRecord.php(639): CApplication->getDb()
+#5 C:\Users\Maximus Stark\Desktop\job\framework\db\ar\CActiveRecord.php(672): CActiveRecord->getDbConnection()
+#6 C:\Users\Maximus Stark\Desktop\job\framework\db\ar\CActiveRecord.php(1477): CActiveRecord->getCommandBuilder()
+#7 C:\Users\Maximus Stark\Desktop\job\framework\web\CActiveDataProvider.php(199): CActiveRecord->findAll(Object(CDbCriteria))
+#8 C:\Users\Maximus Stark\Desktop\job\framework\web\CDataProvider.php(168): CActiveDataProvider->fetchData()
+#9 C:\Users\Maximus Stark\Desktop\job\codeine_website_reviewer\widgets\WebsiteList.php(30): CDataProvider->getData()
+#10 C:\Users\Maximus Stark\Desktop\job\framework\web\CBaseController.php(170): WebsiteList->run()
+#11 C:\Users\Maximus Stark\Desktop\job\codeine_website_reviewer\controllers\SiteController.php(32): CBaseController->widget('application.wid...', Array, true)
+#12 C:\Users\Maximus Stark\Desktop\job\framework\web\actions\CInlineAction.php(49): SiteController->actionIndex()
+#13 C:\Users\Maximus Stark\Desktop\job\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#14 C:\Users\Maximus Stark\Desktop\job\framework\web\CController.php(286): CController->runAction(Object(CInlineAction))
+#15 C:\Users\Maximus Stark\Desktop\job\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 C:\Users\Maximus Stark\Desktop\job\framework\web\CWebApplication.php(282): CController->run('')
+#17 C:\Users\Maximus Stark\Desktop\job\framework\web\CWebApplication.php(141): CWebApplication->runController('')
+#18 C:\Users\Maximus Stark\Desktop\job\framework\base\CApplication.php(185): CWebApplication->processRequest()
+#19 C:\Users\Maximus Stark\Desktop\job\index.php(17): CApplication->run()
+#20 {main}
+REQUEST_URI=/
+HTTP_REFERER=http://localhost/
+---
+2020/11/24 12:15:09 [error] [system.db.CDbCommand] CDbCommand::fetchAll() failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'max.codeine_website' doesn't exist. The SQL statement executed was: SHOW FULL COLUMNS FROM `codeine_website`.
+2020/11/24 12:15:09 [error] [exception.CDbException] CDbException: The table "codeine_website" for active record class "Website" cannot be found in the database. in C:\Users\Maximus Stark\Desktop\job\framework\db\ar\CActiveRecord.php:2390
+Stack trace:
+#0 C:\Users\Maximus Stark\Desktop\job\framework\db\ar\CActiveRecord.php(413): CActiveRecordMetaData->__construct(Object(Website))
+#1 C:\Users\Maximus Stark\Desktop\job\framework\db\ar\CActiveRecord.php(663): CActiveRecord->getMetaData()
+#2 C:\Users\Maximus Stark\Desktop\job\framework\db\ar\CActiveRecord.php(1358): CActiveRecord->getTableSchema()
+#3 C:\Users\Maximus Stark\Desktop\job\framework\db\ar\CActiveRecord.php(1478): CActiveRecord->query(Object(CDbCriteria), true)
+#4 C:\Users\Maximus Stark\Desktop\job\framework\web\CActiveDataProvider.php(199): CActiveRecord->findAll(Object(CDbCriteria))
+#5 C:\Users\Maximus Stark\Desktop\job\framework\web\CDataProvider.php(168): CActiveDataProvider->fetchData()
+#6 C:\Users\Maximus Stark\Desktop\job\codeine_website_reviewer\widgets\WebsiteList.php(30): CDataProvider->getData()
+#7 C:\Users\Maximus Stark\Desktop\job\framework\web\CBaseController.php(170): WebsiteList->run()
+#8 C:\Users\Maximus Stark\Desktop\job\codeine_website_reviewer\controllers\SiteController.php(32): CBaseController->widget('application.wid...', Array, true)
+#9 C:\Users\Maximus Stark\Desktop\job\framework\web\actions\CInlineAction.php(49): SiteController->actionIndex()
+#10 C:\Users\Maximus Stark\Desktop\job\framework\web\CController.php(308): CInlineAction->runWithParams(Array)
+#11 C:\Users\Maximus Stark\Desktop\job\framework\web\CController.php(286): CController->runAction(Object(CInlineAction))
+#12 C:\Users\Maximus Stark\Desktop\job\framework\web\CController.php(265): CController->runActionWithFilters(Object(CInlineAction), Array)
+#13 C:\Users\Maximus Stark\Desktop\job\framework\web\CWebApplication.php(282): CController->run('')
+#14 C:\Users\Maximus Stark\Desktop\job\framework\web\CWebApplication.php(141): CWebApplication->runController('')
+#15 C:\Users\Maximus Stark\Desktop\job\framework\base\CApplication.php(185): CWebApplication->processRequest()
+#16 C:\Users\Maximus Stark\Desktop\job\index.php(17): CApplication->run()
+#17 {main}
+REQUEST_URI=/
+HTTP_REFERER=http://localhost/
+---
