@@ -84,7 +84,7 @@ return array(
 	// App level params
 	'params'=>array(
 		// your email which will receive messages from contact form
-		'adminEmail'=>'admin@my-mail.com',
+		'adminEmail'=>'admin@codeine.xyz',
 		// Website count in "Rating" section
 		'webPerPage'=>6,
         // Website count on Index page
