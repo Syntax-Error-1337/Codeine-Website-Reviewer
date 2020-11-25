@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CErrorEvent class file.
  *
@@ -42,12 +43,12 @@ class CErrorEvent extends CEvent
 	 * @param string $file error file
 	 * @param integer $line error line
 	 */
-	public function __construct($sender,$code,$message,$file,$line)
+	public function __construct($sender, $code, $message, $file, $line)
 	{
-		$this->code=$code;
-		$this->message=$message;
-		$this->file=$file;
-		$this->line=$line;
+		$this->code = $code;
+		$this->message = $message;
+		$this->file = $file;
+		$this->line = $line;
 		parent::__construct($sender);
 	}
 }

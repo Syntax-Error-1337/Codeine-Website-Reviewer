@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file contains core interfaces for Yii framework.
  *
@@ -70,7 +71,7 @@ interface ICache
 	 * @param ICacheDependency $dependency dependency of the cached item. If the dependency changes, the item is labelled invalid.
 	 * @return boolean true if the value is successfully stored into cache, false otherwise
 	 */
-	public function set($id,$value,$expire=0,$dependency=null);
+	public function set($id, $value, $expire = 0, $dependency = null);
 	/**
 	 * Stores a value identified by a key into cache if the cache does not contain this key.
 	 * Nothing will be done if the cache already contains the key.
@@ -80,7 +81,7 @@ interface ICache
 	 * @param ICacheDependency $dependency dependency of the cached item. If the dependency changes, the item is labelled invalid.
 	 * @return boolean true if the value is successfully stored into cache, false otherwise
 	 */
-	public function add($id,$value,$expire=0,$dependency=null);
+	public function add($id, $value, $expire = 0, $dependency = null);
 	/**
 	 * Deletes a value with the specified key from cache
 	 * @param string $id the key of the value to be deleted
@@ -229,7 +230,7 @@ interface IViewRenderer
 	 * @param boolean $return whether the rendering result should be returned
 	 * @return mixed the rendering result, or null if the rendering result is not needed.
 	 */
-	public function renderFile($context,$file,$data,$return);
+	public function renderFile($context, $file, $data, $return);
 }
 
 
@@ -310,7 +311,7 @@ interface IWebUser
 	 * with the tasks and roles assigned to the user.
 	 * @return boolean whether the operations can be performed by this user.
 	 */
-	public function checkAccess($operation,$params=array());
+	public function checkAccess($operation, $params = array());
 	/**
 	 * Redirects the user browser to the login page.
 	 * Before the redirection, the current URL (if it's not an AJAX url) will be
@@ -344,7 +345,7 @@ interface IAuthManager
 	 * with the tasks and roles assigned to the user.
 	 * @return boolean whether the operations can be performed by the user.
 	 */
-	public function checkAccess($itemName,$userId,$params=array());
+	public function checkAccess($itemName, $userId, $params = array());
 
 	/**
 	 * Creates an authorization item.
@@ -361,7 +362,7 @@ interface IAuthManager
 	 * @return CAuthItem the authorization item
 	 * @throws CException if an item with the same name already exists
 	 */
-	public function createAuthItem($name,$type,$description='',$bizRule=null,$data=null);
+	public function createAuthItem($name, $type, $description = '', $bizRule = null, $data = null);
 	/**
 	 * Removes the specified authorization item.
 	 * @param string $name the name of the item to be removed
@@ -376,7 +377,7 @@ interface IAuthManager
 	 * they are not assigned to a user.
 	 * @return array the authorization items of the specific type.
 	 */
-	public function getAuthItems($type=null,$userId=null);
+	public function getAuthItems($type = null, $userId = null);
 	/**
 	 * Returns the authorization item with the specified name.
 	 * @param string $name the name of the item
@@ -388,7 +389,7 @@ interface IAuthManager
 	 * @param CAuthItem $item the item to be saved.
 	 * @param string $oldName the old item name. If null, it means the item name is not changed.
 	 */
-	public function saveAuthItem($item,$oldName=null);
+	public function saveAuthItem($item, $oldName = null);
 
 	/**
 	 * Adds an item as a child of another item.
@@ -396,7 +397,7 @@ interface IAuthManager
 	 * @param string $childName the child item name
 	 * @throws CException if either parent or child doesn't exist or if a loop has been detected.
 	 */
-	public function addItemChild($itemName,$childName);
+	public function addItemChild($itemName, $childName);
 	/**
 	 * Removes a child from its parent.
 	 * Note, the child item is not deleted. Only the parent-child relationship is removed.
@@ -404,14 +405,14 @@ interface IAuthManager
 	 * @param string $childName the child item name
 	 * @return boolean whether the removal is successful
 	 */
-	public function removeItemChild($itemName,$childName);
+	public function removeItemChild($itemName, $childName);
 	/**
 	 * Returns a value indicating whether a child exists within a parent.
 	 * @param string $itemName the parent item name
 	 * @param string $childName the child item name
 	 * @return boolean whether the child exists
 	 */
-	public function hasItemChild($itemName,$childName);
+	public function hasItemChild($itemName, $childName);
 	/**
 	 * Returns the children of the specified item.
 	 * @param mixed $itemName the parent item name. This can be either a string or an array.
@@ -430,21 +431,21 @@ interface IAuthManager
 	 * @return CAuthAssignment the authorization assignment information.
 	 * @throws CException if the item does not exist or if the item has already been assigned to the user
 	 */
-	public function assign($itemName,$userId,$bizRule=null,$data=null);
+	public function assign($itemName, $userId, $bizRule = null, $data = null);
 	/**
 	 * Revokes an authorization assignment from a user.
 	 * @param string $itemName the item name
 	 * @param mixed $userId the user ID (see {@link IWebUser::getId})
 	 * @return boolean whether removal is successful
 	 */
-	public function revoke($itemName,$userId);
+	public function revoke($itemName, $userId);
 	/**
 	 * Returns a value indicating whether the item has been assigned to the user.
 	 * @param string $itemName the item name
 	 * @param mixed $userId the user ID (see {@link IWebUser::getId})
 	 * @return boolean whether the item has been assigned to the user.
 	 */
-	public function isAssigned($itemName,$userId);
+	public function isAssigned($itemName, $userId);
 	/**
 	 * Returns the item assignment information.
 	 * @param string $itemName the item name
@@ -452,7 +453,7 @@ interface IAuthManager
 	 * @return CAuthAssignment the item assignment information. Null is returned if
 	 * the item is not assigned to the user.
 	 */
-	public function getAuthAssignment($itemName,$userId);
+	public function getAuthAssignment($itemName, $userId);
 	/**
 	 * Returns the item assignments for the specified user.
 	 * @param mixed $userId the user ID (see {@link IWebUser::getId})
@@ -491,7 +492,7 @@ interface IAuthManager
 	 * @return boolean whether the execution returns a true value.
 	 * If the business rule is empty, it will also return true.
 	 */
-	public function executeBizRule($bizRule,$params,$data);
+	public function executeBizRule($bizRule, $params, $data);
 }
 
 
@@ -545,7 +546,7 @@ interface IWidgetFactory
 	 * @param array $properties the initial property values (name=>value) of the widget.
 	 * @return CWidget the newly created widget whose properties have been initialized with the given values.
 	 */
-	public function createWidget($owner,$className,$properties=array());
+	public function createWidget($owner, $className, $properties = array());
 }
 
 /**
@@ -571,27 +572,27 @@ interface IDataProvider
 	 * @param boolean $refresh whether the number of data items should be re-calculated.
 	 * @return integer the number of data items in the current page.
 	 */
-	public function getItemCount($refresh=false);
+	public function getItemCount($refresh = false);
 	/**
 	 * Returns the total number of data items.
 	 * When {@link pagination} is set false, this returns the same value as {@link itemCount}.
 	 * @param boolean $refresh whether the total number of data items should be re-calculated.
 	 * @return integer total number of possible data items.
 	 */
-	public function getTotalItemCount($refresh=false);
+	public function getTotalItemCount($refresh = false);
 	/**
 	 * Returns the data items currently available.
 	 * @param boolean $refresh whether the data should be re-fetched from persistent storage.
 	 * @return array the list of data items currently available in this data provider.
 	 */
-	public function getData($refresh=false);
+	public function getData($refresh = false);
 	/**
 	 * Returns the key values associated with the data items.
 	 * @param boolean $refresh whether the keys should be re-calculated.
 	 * @return array the list of key values corresponding to {@link data}. Each data item in {@link data}
 	 * is uniquely identified by the corresponding key value in this array.
 	 */
-	public function getKeys($refresh=false);
+	public function getKeys($refresh = false);
 	/**
 	 * @return CSort the sorting object. If this is false, it means the sorting is disabled.
 	 */
@@ -628,4 +629,3 @@ interface ILogFilter
 	 */
 	public function filter(&$logs);
 }
-

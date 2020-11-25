@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file contains the error handler application component.
  *
@@ -8,7 +9,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-Yii::import('CHtml',true);
+Yii::import('CHtml', true);
 
 /**
  * CErrorHandler handles uncaught PHP errors and exceptions.
@@ -59,7 +60,7 @@ class CErrorHandler extends CApplicationComponent
 	/**
 	 * @var integer maximum number of source code lines to be displayed. Defaults to 25.
 	 */
-	public $maxSourceLines=25;
+	public $maxSourceLines = 25;
 
 	/**
 	 * @var integer maximum number of trace source code lines to be displayed. Defaults to 10.
@@ -70,11 +71,11 @@ class CErrorHandler extends CApplicationComponent
 	/**
 	 * @var string the application administrator information (could be a name or email link). It is displayed in error pages to end users. Defaults to 'the webmaster'.
 	 */
-	public $adminInfo='the webmaster';
+	public $adminInfo = 'the webmaster';
 	/**
 	 * @var boolean whether to discard any existing page output before error display. Defaults to true.
 	 */
-	public $discardOutput=true;
+	public $discardOutput = true;
 	/**
 	 * @var string the route (eg 'site/error') to the controller action that will be used to display external errors.
 	 * Inside the action, it can retrieve the error information by Yii::app()->errorHandler->error.
@@ -94,40 +95,34 @@ class CErrorHandler extends CApplicationComponent
 	public function handle($event)
 	{
 		// set event as handled to prevent it from being handled by other event handlers
-		$event->handled=true;
+		$event->handled = true;
 
-		if($this->discardOutput)
-		{
-			$gzHandler=false;
-			foreach(ob_list_handlers() as $h)
-			{
-				if(strpos($h,'gzhandler')!==false)
-					$gzHandler=true;
+		if ($this->discardOutput) {
+			$gzHandler = false;
+			foreach (ob_list_handlers() as $h) {
+				if (strpos($h, 'gzhandler') !== false)
+					$gzHandler = true;
 			}
 			// the following manual level counting is to deal with zlib.output_compression set to On
 			// for an output buffer created by zlib.output_compression set to On ob_end_clean will fail
-			for($level=ob_get_level();$level>0;--$level)
-			{
-				if(!@ob_end_clean())
+			for ($level = ob_get_level(); $level > 0; --$level) {
+				if (!@ob_end_clean())
 					ob_clean();
 			}
 			// reset headers in case there was an ob_start("ob_gzhandler") before
-			if($gzHandler && !headers_sent() && ob_list_handlers()===array())
-			{
-				if(function_exists('header_remove')) // php >= 5.3
+			if ($gzHandler && !headers_sent() && ob_list_handlers() === array()) {
+				if (function_exists('header_remove')) // php >= 5.3
 				{
 					header_remove('Vary');
 					header_remove('Content-Encoding');
-				}
-				else
-				{
+				} else {
 					header('Vary:');
 					header('Content-Encoding:');
 				}
 			}
 		}
 
-		if($event instanceof CExceptionEvent)
+		if ($event instanceof CExceptionEvent)
 			$this->handleException($event->exception);
 		else // CErrorEvent
 			$this->handleError($event);
@@ -167,57 +162,50 @@ class CErrorHandler extends CApplicationComponent
 	 */
 	protected function handleException($exception)
 	{
-		$app=Yii::app();
-		if($app instanceof CWebApplication)
-		{
-			if(($trace=$this->getExactTrace($exception))===null)
-			{
-				$fileName=$exception->getFile();
-				$errorLine=$exception->getLine();
-			}
-			else
-			{
-				$fileName=$trace['file'];
-				$errorLine=$trace['line'];
+		$app = Yii::app();
+		if ($app instanceof CWebApplication) {
+			if (($trace = $this->getExactTrace($exception)) === null) {
+				$fileName = $exception->getFile();
+				$errorLine = $exception->getLine();
+			} else {
+				$fileName = $trace['file'];
+				$errorLine = $trace['line'];
 			}
 
 			$trace = $exception->getTrace();
 
-			foreach($trace as $i=>$t)
-			{
-				if(!isset($t['file']))
-					$trace[$i]['file']='unknown';
+			foreach ($trace as $i => $t) {
+				if (!isset($t['file']))
+					$trace[$i]['file'] = 'unknown';
 
-				if(!isset($t['line']))
-					$trace[$i]['line']=0;
+				if (!isset($t['line']))
+					$trace[$i]['line'] = 0;
 
-				if(!isset($t['function']))
-					$trace[$i]['function']='unknown';
+				if (!isset($t['function']))
+					$trace[$i]['function'] = 'unknown';
 
 				unset($trace[$i]['object']);
 			}
 
-			$this->_exception=$exception;
-			$this->_error=$data=array(
-				'code'=>($exception instanceof CHttpException)?$exception->statusCode:500,
-				'type'=>get_class($exception),
-				'errorCode'=>$exception->getCode(),
-				'message'=>$exception->getMessage(),
-				'file'=>$fileName,
-				'line'=>$errorLine,
-				'trace'=>$exception->getTraceAsString(),
-				'traces'=>$trace,
+			$this->_exception = $exception;
+			$this->_error = $data = array(
+				'code' => ($exception instanceof CHttpException) ? $exception->statusCode : 500,
+				'type' => get_class($exception),
+				'errorCode' => $exception->getCode(),
+				'message' => $exception->getMessage(),
+				'file' => $fileName,
+				'line' => $errorLine,
+				'trace' => $exception->getTraceAsString(),
+				'traces' => $trace,
 			);
 
-			if(!headers_sent())
-			{
-				$httpVersion=Yii::app()->request->getHttpVersion();
-				header("HTTP/$httpVersion {$data['code']} ".$this->getHttpHeader($data['code'], get_class($exception)));
+			if (!headers_sent()) {
+				$httpVersion = Yii::app()->request->getHttpVersion();
+				header("HTTP/$httpVersion {$data['code']} " . $this->getHttpHeader($data['code'], get_class($exception)));
 			}
 
 			$this->renderException();
-		}
-		else
+		} else
 			$app->displayException($exception);
 	}
 
@@ -227,35 +215,32 @@ class CErrorHandler extends CApplicationComponent
 	 */
 	protected function handleError($event)
 	{
-		$trace=debug_backtrace();
+		$trace = debug_backtrace();
 		// skip the first 3 stacks as they do not tell the error position
-		if(count($trace)>3)
-			$trace=array_slice($trace,3);
-		$traceString='';
-		foreach($trace as $i=>$t)
-		{
-			if(!isset($t['file']))
-				$trace[$i]['file']='unknown';
+		if (count($trace) > 3)
+			$trace = array_slice($trace, 3);
+		$traceString = '';
+		foreach ($trace as $i => $t) {
+			if (!isset($t['file']))
+				$trace[$i]['file'] = 'unknown';
 
-			if(!isset($t['line']))
-				$trace[$i]['line']=0;
+			if (!isset($t['line']))
+				$trace[$i]['line'] = 0;
 
-			if(!isset($t['function']))
-				$trace[$i]['function']='unknown';
+			if (!isset($t['function']))
+				$trace[$i]['function'] = 'unknown';
 
-			$traceString.="#$i {$trace[$i]['file']}({$trace[$i]['line']}): ";
-			if(isset($t['object']) && is_object($t['object']))
-				$traceString.=get_class($t['object']).'->';
-			$traceString.="{$trace[$i]['function']}()\n";
+			$traceString .= "#$i {$trace[$i]['file']}({$trace[$i]['line']}): ";
+			if (isset($t['object']) && is_object($t['object']))
+				$traceString .= get_class($t['object']) . '->';
+			$traceString .= "{$trace[$i]['function']}()\n";
 
 			unset($trace[$i]['object']);
 		}
 
-		$app=Yii::app();
-		if($app instanceof CWebApplication)
-		{
-			switch($event->code)
-			{
+		$app = Yii::app();
+		if ($app instanceof CWebApplication) {
+			switch ($event->code) {
 				case E_WARNING:
 					$type = 'PHP warning';
 					break;
@@ -277,26 +262,24 @@ class CErrorHandler extends CApplicationComponent
 				default:
 					$type = 'PHP error';
 			}
-			$this->_exception=null;
-			$this->_error=array(
-				'code'=>500,
-				'type'=>$type,
-				'message'=>$event->message,
-				'file'=>$event->file,
-				'line'=>$event->line,
-				'trace'=>$traceString,
-				'traces'=>$trace,
+			$this->_exception = null;
+			$this->_error = array(
+				'code' => 500,
+				'type' => $type,
+				'message' => $event->message,
+				'file' => $event->file,
+				'line' => $event->line,
+				'trace' => $traceString,
+				'traces' => $trace,
 			);
-			if(!headers_sent())
-			{
-				$httpVersion=Yii::app()->request->getHttpVersion();
+			if (!headers_sent()) {
+				$httpVersion = Yii::app()->request->getHttpVersion();
 				header("HTTP/$httpVersion 500 Internal Server Error");
 			}
 
 			$this->renderError();
-		}
-		else
-			$app->displayError($event->code,$event->message,$event->file,$event->line);
+		} else
+			$app->displayError($event->code, $event->message, $event->file, $event->line);
 	}
 
 	/**
@@ -305,7 +288,7 @@ class CErrorHandler extends CApplicationComponent
 	 */
 	protected function isAjaxRequest()
 	{
-		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH']==='XMLHttpRequest';
+		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
 	}
 
 	/**
@@ -315,12 +298,11 @@ class CErrorHandler extends CApplicationComponent
 	 */
 	protected function getExactTrace($exception)
 	{
-		$traces=$exception->getTrace();
+		$traces = $exception->getTrace();
 
-		foreach($traces as $trace)
-		{
+		foreach ($traces as $trace) {
 			// property access exception
-			if(isset($trace['function']) && ($trace['function']==='__get' || $trace['function']==='__set'))
+			if (isset($trace['function']) && ($trace['function'] === '__get' || $trace['function'] === '__set'))
 				return $trace;
 		}
 		return null;
@@ -332,12 +314,12 @@ class CErrorHandler extends CApplicationComponent
 	 * See {@link getViewFile} for how a view file is located given its name.
 	 * @param array $data data to be passed to the view
 	 */
-	protected function render($view,$data)
+	protected function render($view, $data)
 	{
-		$data['version']=$this->getVersionInfo();
-		$data['time']=time();
-		$data['admin']=$this->adminInfo;
-		include($this->getViewFile($view,$data['code']));
+		$data['version'] = $this->getVersionInfo();
+		$data['time'] = time();
+		$data['admin'] = $this->adminInfo;
+		include($this->getViewFile($view, $data['code']));
 	}
 
 	/**
@@ -346,15 +328,14 @@ class CErrorHandler extends CApplicationComponent
 	 */
 	protected function renderException()
 	{
-		$exception=$this->getException();
-		if($exception instanceof CHttpException || !YII_DEBUG)
+		$exception = $this->getException();
+		if ($exception instanceof CHttpException || !YII_DEBUG)
 			$this->renderError();
-		else
-		{
-			if($this->isAjaxRequest())
+		else {
+			if ($this->isAjaxRequest())
 				Yii::app()->displayException($exception);
 			else
-				$this->render('exception',$this->getError());
+				$this->render('exception', $this->getError());
 		}
 	}
 
@@ -364,17 +345,16 @@ class CErrorHandler extends CApplicationComponent
 	 */
 	protected function renderError()
 	{
-		if($this->errorAction!==null)
+		if ($this->errorAction !== null)
 			Yii::app()->runController($this->errorAction);
-		else
-		{
-			$data=$this->getError();
-			if($this->isAjaxRequest())
-				Yii::app()->displayError($data['code'],$data['message'],$data['file'],$data['line']);
-			elseif(YII_DEBUG)
-				$this->render('exception',$data);
+		else {
+			$data = $this->getError();
+			if ($this->isAjaxRequest())
+				Yii::app()->displayError($data['code'], $data['message'], $data['file'], $data['line']);
+			elseif (YII_DEBUG)
+				$this->render('exception', $data);
 			else
-				$this->render('error',$data);
+				$this->render('error', $data);
 		}
 	}
 
@@ -384,21 +364,19 @@ class CErrorHandler extends CApplicationComponent
 	 * @param integer $code HTTP status code
 	 * @return string view file path
 	 */
-	protected function getViewFile($view,$code)
+	protected function getViewFile($view, $code)
 	{
-		$viewPaths=array(
-			Yii::app()->getTheme()===null ? null :  Yii::app()->getTheme()->getSystemViewPath(),
+		$viewPaths = array(
+			Yii::app()->getTheme() === null ? null :  Yii::app()->getTheme()->getSystemViewPath(),
 			Yii::app() instanceof CWebApplication ? Yii::app()->getSystemViewPath() : null,
-			YII_PATH.DIRECTORY_SEPARATOR.'views',
+			YII_PATH . DIRECTORY_SEPARATOR . 'views',
 		);
 
-		foreach($viewPaths as $i=>$viewPath)
-		{
-			if($viewPath!==null)
-			{
-				 $viewFile=$this->getViewFileInternal($viewPath,$view,$code,$i===2?'en_us':null);
-				 if(is_file($viewFile))
-				 	 return $viewFile;
+		foreach ($viewPaths as $i => $viewPath) {
+			if ($viewPath !== null) {
+				$viewFile = $this->getViewFileInternal($viewPath, $view, $code, $i === 2 ? 'en_us' : null);
+				if (is_file($viewFile))
+					return $viewFile;
 			}
 		}
 	}
@@ -411,17 +389,15 @@ class CErrorHandler extends CApplicationComponent
 	 * @param string $srcLanguage the language that the view file is in
 	 * @return string view file path
 	 */
-	protected function getViewFileInternal($viewPath,$view,$code,$srcLanguage=null)
+	protected function getViewFileInternal($viewPath, $view, $code, $srcLanguage = null)
 	{
-		$app=Yii::app();
-		if($view==='error')
-		{
-			$viewFile=$app->findLocalizedFile($viewPath.DIRECTORY_SEPARATOR."error{$code}.php",$srcLanguage);
-			if(!is_file($viewFile))
-				$viewFile=$app->findLocalizedFile($viewPath.DIRECTORY_SEPARATOR.'error.php',$srcLanguage);
-		}
-		else
-			$viewFile=$viewPath.DIRECTORY_SEPARATOR."exception.php";
+		$app = Yii::app();
+		if ($view === 'error') {
+			$viewFile = $app->findLocalizedFile($viewPath . DIRECTORY_SEPARATOR . "error{$code}.php", $srcLanguage);
+			if (!is_file($viewFile))
+				$viewFile = $app->findLocalizedFile($viewPath . DIRECTORY_SEPARATOR . 'error.php', $srcLanguage);
+		} else
+			$viewFile = $viewPath . DIRECTORY_SEPARATOR . "exception.php";
 		return $viewFile;
 	}
 
@@ -432,14 +408,12 @@ class CErrorHandler extends CApplicationComponent
 	 */
 	protected function getVersionInfo()
 	{
-		if(YII_DEBUG)
-		{
-			$version='<a href="http://www.yiiframework.com/">Yii Framework</a>/'.Yii::getVersion();
-			if(isset($_SERVER['SERVER_SOFTWARE']))
-				$version=$_SERVER['SERVER_SOFTWARE'].' '.$version;
-		}
-		else
-			$version='';
+		if (YII_DEBUG) {
+			$version = '<a href="http://www.yiiframework.com/">Yii Framework</a>/' . Yii::getVersion();
+			if (isset($_SERVER['SERVER_SOFTWARE']))
+				$version = $_SERVER['SERVER_SOFTWARE'] . ' ' . $version;
+		} else
+			$version = '';
 		return $version;
 	}
 
@@ -451,47 +425,40 @@ class CErrorHandler extends CApplicationComponent
 	 */
 	protected function argumentsToString($args)
 	{
-		$count=0;
+		$count = 0;
 
-		$isAssoc=$args!==array_values($args);
+		$isAssoc = $args !== array_values($args);
 
-		foreach($args as $key => $value)
-		{
+		foreach ($args as $key => $value) {
 			$count++;
-			if($count>=5)
-			{
-				if($count>5)
+			if ($count >= 5) {
+				if ($count > 5)
 					unset($args[$key]);
 				else
-					$args[$key]='...';
+					$args[$key] = '...';
 				continue;
 			}
 
-			if(is_object($value))
+			if (is_object($value))
 				$args[$key] = get_class($value);
-			elseif(is_bool($value))
+			elseif (is_bool($value))
 				$args[$key] = $value ? 'true' : 'false';
-			elseif(is_string($value))
-			{
-				if(strlen($value)>64)
-					$args[$key] = '"'.substr($value,0,64).'..."';
+			elseif (is_string($value)) {
+				if (strlen($value) > 64)
+					$args[$key] = '"' . substr($value, 0, 64) . '..."';
 				else
-					$args[$key] = '"'.$value.'"';
-			}
-			elseif(is_array($value))
-				$args[$key] = 'array('.$this->argumentsToString($value).')';
-			elseif($value===null)
+					$args[$key] = '"' . $value . '"';
+			} elseif (is_array($value))
+				$args[$key] = 'array(' . $this->argumentsToString($value) . ')';
+			elseif ($value === null)
 				$args[$key] = 'null';
-			elseif(is_resource($value))
+			elseif (is_resource($value))
 				$args[$key] = 'resource';
 
-			if(is_string($key))
-			{
-				$args[$key] = '"'.$key.'" => '.$args[$key];
-			}
-			elseif($isAssoc)
-			{
-				$args[$key] = $key.' => '.$args[$key];
+			if (is_string($key)) {
+				$args[$key] = '"' . $key . '" => ' . $args[$key];
+			} elseif ($isAssoc) {
+				$args[$key] = $key . ' => ' . $args[$key];
 			}
 		}
 		$out = implode(", ", $args);
@@ -506,10 +473,9 @@ class CErrorHandler extends CApplicationComponent
 	 */
 	protected function isCoreCode($trace)
 	{
-		if(isset($trace['file']))
-		{
-			$systemPath=realpath(dirname(__FILE__).'/..');
-			return $trace['file']==='unknown' || strpos(realpath($trace['file']),$systemPath.DIRECTORY_SEPARATOR)===0;
+		if (isset($trace['file'])) {
+			$systemPath = realpath(dirname(__FILE__) . '/..');
+			return $trace['file'] === 'unknown' || strpos(realpath($trace['file']), $systemPath . DIRECTORY_SEPARATOR) === 0;
 		}
 		return false;
 	}
@@ -521,28 +487,27 @@ class CErrorHandler extends CApplicationComponent
 	 * @param integer $maxLines maximum number of lines to display
 	 * @return string the rendering result
 	 */
-	protected function renderSourceCode($file,$errorLine,$maxLines)
+	protected function renderSourceCode($file, $errorLine, $maxLines)
 	{
 		$errorLine--;	// adjust line number to 0-based from 1-based
-		if($errorLine<0 || ($lines=@file($file))===false || ($lineCount=count($lines))<=$errorLine)
+		if ($errorLine < 0 || ($lines = @file($file)) === false || ($lineCount = count($lines)) <= $errorLine)
 			return '';
 
-		$halfLines=(int)($maxLines/2);
-		$beginLine=$errorLine-$halfLines>0 ? $errorLine-$halfLines:0;
-		$endLine=$errorLine+$halfLines<$lineCount?$errorLine+$halfLines:$lineCount-1;
-		$lineNumberWidth=strlen($endLine+1);
+		$halfLines = (int)($maxLines / 2);
+		$beginLine = $errorLine - $halfLines > 0 ? $errorLine - $halfLines : 0;
+		$endLine = $errorLine + $halfLines < $lineCount ? $errorLine + $halfLines : $lineCount - 1;
+		$lineNumberWidth = strlen($endLine + 1);
 
-		$output='';
-		for($i=$beginLine;$i<=$endLine;++$i)
-		{
-			$isErrorLine = $i===$errorLine;
-			$code=sprintf("<span class=\"ln".($isErrorLine?' error-ln':'')."\">%0{$lineNumberWidth}d</span> %s",$i+1,CHtml::encode(str_replace("\t",'    ',$lines[$i])));
-			if(!$isErrorLine)
-				$output.=$code;
+		$output = '';
+		for ($i = $beginLine; $i <= $endLine; ++$i) {
+			$isErrorLine = $i === $errorLine;
+			$code = sprintf("<span class=\"ln" . ($isErrorLine ? ' error-ln' : '') . "\">%0{$lineNumberWidth}d</span> %s", $i + 1, CHtml::encode(str_replace("\t", '    ', $lines[$i])));
+			if (!$isErrorLine)
+				$output .= $code;
 			else
-				$output.='<span class="error">'.$code.'</span>';
+				$output .= '<span class="error">' . $code . '</span>';
 		}
-		return '<div class="code"><pre>'.$output.'</pre></div>';
+		return '<div class="code"><pre>' . $output . '</pre></div>';
 	}
 	/**
 	 * Return correct message for each known http error code
@@ -550,7 +515,7 @@ class CErrorHandler extends CApplicationComponent
 	 * @param string $replacement replacement error string that is returned if code is unknown
 	 * @return string the textual representation of the given error code or the replacement string if the error code is unknown
 	 */
-	protected function getHttpHeader($httpCode, $replacement='')
+	protected function getHttpHeader($httpCode, $replacement = '')
 	{
 		$httpCodes = array(
 			100 => 'Continue',
@@ -615,7 +580,7 @@ class CErrorHandler extends CApplicationComponent
 			510 => 'Not Extended',
 			511 => 'Network Authentication Required',
 		);
-		if(isset($httpCodes[$httpCode]))
+		if (isset($httpCodes[$httpCode]))
 			return $httpCodes[$httpCode];
 		else
 			return $replacement;

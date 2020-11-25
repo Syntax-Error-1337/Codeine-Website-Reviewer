@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CException class file.
  *
@@ -18,4 +19,3 @@
 class CException extends Exception
 {
 }
-

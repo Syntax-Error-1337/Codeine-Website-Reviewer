@@ -1,19 +1,19 @@
 function dynamicThumbnail(url) {
-    $.each(url, function(key, data) {
-        var onReady = function(img, downloadUrl) {
+    $.each(url, function (key, data) {
+        var onReady = function (img, downloadUrl) {
             img.attr("src", downloadUrl);
             //console.log(downloadUrl);
-            img.on("error", function() {
+            img.on("error", function () {
                 onError(img);
             });
         };
 
-        var onError = function(img) {
+        var onError = function (img) {
             img.attr("src", _global.baseUrl + "/img/not-available.png");
         };
 
-        var image = $('#thumb_'+key);
-        if(_global.proxyImage === 1) {
+        var image = $('#thumb_' + key);
+        if (_global.proxyImage === 1) {
             var pp = new PagePeekerHelper(image, data, onReady, onError);
             pp.poll();
         } else {
@@ -22,8 +22,8 @@ function dynamicThumbnail(url) {
     });
 }
 
-$(document).ready(function(){
-    $("a.disabled, li.disabled a").click(function(){
+$(document).ready(function () {
+    $("a.disabled, li.disabled a").click(function () {
         return false;
     })
 });
@@ -31,7 +31,7 @@ $(document).ready(function(){
 // Constructor
 function PagePeekerHelper(image, data, onReady, onError) {
     $.ajaxSetup({ cache: false });
-    this.proxy = _global.baseUrl+'/index.php/proxy';
+    this.proxy = _global.baseUrl + '/index.php/proxy';
     this.data = data;
     this.onReady = onReady;
     this.onError = onError;
@@ -40,7 +40,7 @@ function PagePeekerHelper(image, data, onReady, onError) {
     this.execLimit = 3; // If after x requests PP willn't response with status "Ready", then clear interval to avoid ddos attack.
 }
 
-PagePeekerHelper.prototype.poll = function() {
+PagePeekerHelper.prototype.poll = function () {
     var self = this,
         size = this.data.size || 'm',
         url = this.data.url || '',
@@ -60,26 +60,26 @@ PagePeekerHelper.prototype.poll = function() {
         isFirstCall = true;
 
     // Flush the image
-    $.get(proxyReset, function() {
+    $.get(proxyReset, function () {
         //console.log("Reseting " + url);
 
-        var pollUntilReady = function(cb) {
+        var pollUntilReady = function (cb) {
             //console.log("Polling " + url + " " + (i + 1) + " times");
 
-            $.getJSON(proxyPoll, function(data) {
+            $.getJSON(proxyPoll, function (data) {
                 //console.log("Received", data);
                 var isReady = (data && data.IsReady) || 0;
-                if(isReady) {
+                if (isReady) {
                     //console.log("The " + url + " is ready: " + isReady);
                     self.onReady.apply(self, [self.image, self.data.thumb]);
                     return true;
                 }
-                if(data && data.Error) {
+                if (data && data.Error) {
                     self.onError.apply(self, [self.image]);
                     return true;
                 }
                 cb();
-            }).fail(function() {
+            }).fail(function () {
                 //console.log('Failed to request local proxy script. Clearing the timeout');
                 self.onError.apply(self, [self.image]);
             });
@@ -88,12 +88,12 @@ PagePeekerHelper.prototype.poll = function() {
 
         (function pollThumbnail() {
             var timeout = isFirstCall ? 0 : self.pollTime * 1000;
-            setTimeout(function() {
-                pollUntilReady(function() {
+            setTimeout(function () {
+                pollUntilReady(function () {
                     //console.log("Async " + url + " has done");
                     isFirstCall = false;
                     i++;
-                    if(i < limit) {
+                    if (i < limit) {
                         pollThumbnail();
                     } else {
                         //console.log("Reached limit of reuqests for " + url);
@@ -103,7 +103,7 @@ PagePeekerHelper.prototype.poll = function() {
             }, timeout);
         })();
 
-    }).fail(function() {
+    }).fail(function () {
         self.onError.apply(self, [self.image]);
     });
 };
@@ -114,10 +114,10 @@ var WrHelper = (function () {
             var copy = a2.slice(),
                 i = 0,
                 l = a1.length
-            ;
-            for(; i < l; i++) {
+                ;
+            for (; i < l; i++) {
                 var index = copy.indexOf(a1[i]);
-                if(index === -1) {
+                if (index === -1) {
                     return false;
                 } else {
                     copy.splice(index, 1);
@@ -135,7 +135,7 @@ var WrPsi = (function () {
         var options = $.extend({}, {
             'i18nEnterFullscreen': 'Enter fullscreen mode',
             'i18nExitFullscreen': 'Exit fullscreen mode',
-            'iframeWrapperSelector':  '.psi__iframe-wrapper',
+            'iframeWrapperSelector': '.psi__iframe-wrapper',
             'analyzeBtnSelector': '.psi__analyze-btn',
             'url': '',
             'locale': 'en',
@@ -158,7 +158,7 @@ var WrPsi = (function () {
             analyze();
         });
 
-        if(options.runInstantly) {
+        if (options.runInstantly) {
             analyze();
         }
 
@@ -177,7 +177,7 @@ var WrPsi = (function () {
             var selectedCategories = getCheckedValues(category$);
             var selectedStrategy = getFirstChecked(strategy$);
 
-            if(WrHelper.isSameArray(currentCategories, selectedCategories) && currentStrategy === selectedStrategy)  {
+            if (WrHelper.isSameArray(currentCategories, selectedCategories) && currentStrategy === selectedStrategy) {
                 //console.log(`Skip!`);
                 return;
             }
@@ -199,7 +199,7 @@ var WrPsi = (function () {
                 class: "btn btn-danger psi__btn-view-mode" + (isFullscreen ? " psi__btn-view-mode-fullscreen" : " psi__btn-view-mode-normal"),
             }).on("click", function (e) {
                 e.preventDefault();
-                if(isFullscreen) {
+                if (isFullscreen) {
                     isFullscreen = false;
                     iframeWrapper$.removeClass('psi__fullscreen').addClass('psi__content-view');
                     $(document.body).removeClass('psi__body-fullscreen');
@@ -236,7 +236,7 @@ var WrPsi = (function () {
     function getCheckedValues(selector$) {
         var selected = [];
         selector$.each(function () {
-            if($(this).is(":checked")) {
+            if ($(this).is(":checked")) {
                 selected.push($(this).val());
             }
         });
@@ -250,7 +250,7 @@ var WrPsi = (function () {
 
     function encode(a) {
         return a.map(function (item) {
-            return Array.isArray(item) ? encode(item) : encodeURIComponent(item.k)+'='+encodeURIComponent(item.v);
+            return Array.isArray(item) ? encode(item) : encodeURIComponent(item.k) + '=' + encodeURIComponent(item.v);
         }).join('&');
     }
 
@@ -262,12 +262,12 @@ var WrPsi = (function () {
         params.url = params.url || '';
 
         return baseApiUrl + '?' + encode([
-            {k: "psiurl", v: params.url},
-            {k: "strategy", v: params.strategy},
+            { k: "psiurl", v: params.url },
+            { k: "strategy", v: params.strategy },
             params.category.map(function (item) {
-                return {k: "category", v: item};
+                return { k: "category", v: item };
             }),
-            {k: "locale", v: params.locale}
+            { k: "locale", v: params.locale }
         ]);
     }
 })();

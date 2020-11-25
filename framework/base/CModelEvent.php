@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CModelEvent class file.
  *
@@ -27,5 +28,5 @@ class CModelEvent extends CEvent
 	 * If true, the normal execution cycles will continue, including performing the real validations and calling
 	 * {@link CModel::afterValidate}.
 	 */
-	public $isValid=true;
+	public $isValid = true;
 }

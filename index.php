@@ -7,8 +7,8 @@ if (!@ini_get('date.timezone'))
 mb_internal_encoding('UTF-8');
 
 // change the following paths if necessary
-$yii=dirname(__FILE__).'/framework/yii.php';
-$config=dirname(__FILE__).'/codeine_website_reviewer/config/main.php';
+$yii = dirname(__FILE__) . '/framework/yii.php';
+$config = dirname(__FILE__) . '/codeine_website_reviewer/config/main.php';
 
 // remove the following lines when in production mode
 // defined('YII_DEBUG') or define('YII_DEBUG', true);

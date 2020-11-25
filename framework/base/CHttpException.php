@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CHttpException class file.
  *
@@ -31,9 +32,9 @@ class CHttpException extends CException
 	 * @param string $message error message
 	 * @param integer $code error code
 	 */
-	public function __construct($status,$message=null,$code=0)
+	public function __construct($status, $message = null, $code = 0)
 	{
-		$this->statusCode=$status;
-		parent::__construct($message,$code);
+		$this->statusCode = $status;
+		parent::__construct($message, $code);
 	}
 }

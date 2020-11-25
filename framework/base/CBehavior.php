@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CBehavior class file.
  *
@@ -19,7 +20,7 @@
  */
 class CBehavior extends CComponent implements IBehavior
 {
-	private $_enabled=false;
+	private $_enabled = false;
 	private $_owner;
 
 	/**
@@ -46,8 +47,8 @@ class CBehavior extends CComponent implements IBehavior
 	 */
 	public function attach($owner)
 	{
-		$this->_enabled=true;
-		$this->_owner=$owner;
+		$this->_enabled = true;
+		$this->_owner = $owner;
 		$this->_attachEventHandlers();
 	}
 
@@ -61,10 +62,10 @@ class CBehavior extends CComponent implements IBehavior
 	 */
 	public function detach($owner)
 	{
-		foreach($this->events() as $event=>$handler)
-			$owner->detachEventHandler($event,array($this,$handler));
-		$this->_owner=null;
-		$this->_enabled=false;
+		foreach ($this->events() as $event => $handler)
+			$owner->detachEventHandler($event, array($this, $handler));
+		$this->_owner = null;
+		$this->_enabled = false;
 	}
 
 	/**
@@ -88,27 +89,24 @@ class CBehavior extends CComponent implements IBehavior
 	 */
 	public function setEnabled($value)
 	{
-		$value=(bool)$value;
-		if($this->_enabled!=$value && $this->_owner)
-		{
-			if($value)
+		$value = (bool)$value;
+		if ($this->_enabled != $value && $this->_owner) {
+			if ($value)
 				$this->_attachEventHandlers();
-			else
-			{
-				foreach($this->events() as $event=>$handler)
-					$this->_owner->detachEventHandler($event,array($this,$handler));
+			else {
+				foreach ($this->events() as $event => $handler)
+					$this->_owner->detachEventHandler($event, array($this, $handler));
 			}
 		}
-		$this->_enabled=$value;
+		$this->_enabled = $value;
 	}
 
 	private function _attachEventHandlers()
 	{
-		$class=new ReflectionClass($this);
-		foreach($this->events() as $event=>$handler)
-		{
-			if($class->getMethod($handler)->isPublic())
-				$this->_owner->attachEventHandler($event,array($this,$handler));
+		$class = new ReflectionClass($this);
+		foreach ($this->events() as $event => $handler) {
+			if ($class->getMethod($handler)->isPublic())
+				$this->_owner->attachEventHandler($event, array($this, $handler));
 		}
 	}
 }

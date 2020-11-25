@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CDbStatePersister class file.
  *
@@ -37,11 +38,11 @@ class CDbStatePersister extends CApplicationComponent implements IStatePersister
 	 * @var string the database table name storing the state data. Make sure the table
 	 * exists or database user is granted to CREATE tables.
 	 */
-	public $stateTableName='state';
+	public $stateTableName = 'state';
 	/**
 	 * @var string connection ID
 	 */
-	public $dbComponent='db';
+	public $dbComponent = 'db';
 	/**
 	 * @var CDbConnection instance
 	 */
@@ -49,11 +50,11 @@ class CDbStatePersister extends CApplicationComponent implements IStatePersister
 	/**
 	 * @var string Column name for value-field
 	 */
-	public $valueField='value';
+	public $valueField = 'value';
 	/**
 	 * @var string Column name for key-field
 	 */
-	public $keyField='key';
+	public $keyField = 'key';
 
 
 	/**
@@ -64,18 +65,18 @@ class CDbStatePersister extends CApplicationComponent implements IStatePersister
 	public function init()
 	{
 		parent::init();
-		if($this->stateTableName===null)
+		if ($this->stateTableName === null)
 			throw new CException(Yii::t('yii', 'stateTableName param cannot be null.'));
-		$this->db=Yii::app()->getComponent($this->dbComponent);
-		if($this->db===null)
-			throw new CException(Yii::t('yii', '\'{db}\' component doesn\'t exist.',array(
-				'{db}'=>$this->dbComponent
+		$this->db = Yii::app()->getComponent($this->dbComponent);
+		if ($this->db === null)
+			throw new CException(Yii::t('yii', '\'{db}\' component doesn\'t exist.', array(
+				'{db}' => $this->dbComponent
 			)));
-		if(!($this->db instanceof CDbConnection))
-			throw new CException(Yii::t ('yii', '\'{db}\' component is not a valid CDbConnection instance.',array(
-				'{db}'=>$this->dbComponent
+		if (!($this->db instanceof CDbConnection))
+			throw new CException(Yii::t('yii', '\'{db}\' component is not a valid CDbConnection instance.', array(
+				'{db}' => $this->dbComponent
 			)));
-		if($this->db->schema->getTable($this->stateTableName,true)===null)
+		if ($this->db->schema->getTable($this->stateTableName, true) === null)
 			$this->createTable();
 	}
 
@@ -85,13 +86,13 @@ class CDbStatePersister extends CApplicationComponent implements IStatePersister
 	 */
 	public function load()
 	{
-		$command=$this->db->createCommand();
-		$command=$command->select($this->valueField)->from($this->stateTableName);
-		$command=$command->where($this->db->quoteColumnName($this->keyField).'=:key',array(
-			':key'=>Yii::app()->name
+		$command = $this->db->createCommand();
+		$command = $command->select($this->valueField)->from($this->stateTableName);
+		$command = $command->where($this->db->quoteColumnName($this->keyField) . '=:key', array(
+			':key' => Yii::app()->name
 		));
-		$state=$command->queryScalar();
-		if(false!==$state)
+		$state = $command->queryScalar();
+		if (false !== $state)
 			return unserialize($state);
 		else
 			return null;
@@ -104,17 +105,19 @@ class CDbStatePersister extends CApplicationComponent implements IStatePersister
 	 */
 	public function save($state)
 	{
-		$command=$this->db->createCommand();
-		if(false===$this->exists())
-			return $command->insert($this->stateTableName,array(
-				$this->keyField=>Yii::app()->name,
-				$this->valueField=>serialize($state)
+		$command = $this->db->createCommand();
+		if (false === $this->exists())
+			return $command->insert($this->stateTableName, array(
+				$this->keyField => Yii::app()->name,
+				$this->valueField => serialize($state)
 			));
 		else
-			return $command->update($this->stateTableName,array($this->valueField=>serialize($state)),
-				$this->db->quoteColumnName($this->keyField).'=:key',
-				array(':key'=>Yii::app()->name)
-		);
+			return $command->update(
+				$this->stateTableName,
+				array($this->valueField => serialize($state)),
+				$this->db->quoteColumnName($this->keyField) . '=:key',
+				array(':key' => Yii::app()->name)
+			);
 	}
 
 	/**
@@ -122,10 +125,10 @@ class CDbStatePersister extends CApplicationComponent implements IStatePersister
 	 */
 	public function exists()
 	{
-		$command=$this->db->createCommand();
-		$command=$command->select($this->keyField)->from($this->stateTableName);
-		$command=$command->where($this->db->quoteColumnName($this->keyField).'=:key',array(
-			':key'=>Yii::app()->name
+		$command = $this->db->createCommand();
+		$command = $command->select($this->keyField)->from($this->stateTableName);
+		$command = $command->where($this->db->quoteColumnName($this->keyField) . '=:key', array(
+			':key' => Yii::app()->name
 		));
 		return $command->queryScalar();
 	}
@@ -136,18 +139,15 @@ class CDbStatePersister extends CApplicationComponent implements IStatePersister
 	 */
 	protected function createTable()
 	{
-		try
-		{
-			$command=$this->db->createCommand();
-			$command->createTable($this->stateTableName,array(
-				$this->keyField=>'string NOT NULL',
-				$this->valueField=>'text NOT NULL',
-				'PRIMARY KEY ('.$this->db->quoteColumnName($this->keyField).')'
+		try {
+			$command = $this->db->createCommand();
+			$command->createTable($this->stateTableName, array(
+				$this->keyField => 'string NOT NULL',
+				$this->valueField => 'text NOT NULL',
+				'PRIMARY KEY (' . $this->db->quoteColumnName($this->keyField) . ')'
 			));
-		}
-		catch (CDbException $e)
-		{
-			throw new CException(Yii::t('yii','Can\'t create state persister table. Check CREATE privilege for \'{db}\' connection user or create table manually with SQL: {sql}.',array('{db}'=>$this->dbComponent,'{sql}'=>$command->text ) ) );
+		} catch (CDbException $e) {
+			throw new CException(Yii::t('yii', 'Can\'t create state persister table. Check CREATE privilege for \'{db}\' connection user or create table manually with SQL: {sql}.', array('{db}' => $this->dbComponent, '{sql}' => $command->text)));
 		}
 	}
 }
